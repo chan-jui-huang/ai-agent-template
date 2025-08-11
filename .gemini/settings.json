@@ -3,6 +3,7 @@
   "selectedAuthType": "oauth-personal",
   "contextFileName": [
     ".github/copilot-instructions.md",
+    "git_commit_spec.md",
     "GEMINI.md"
   ],
   "preferredEditor": "vscode",
