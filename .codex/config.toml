@@ -1,0 +1,7 @@
+approval_policy = "on-failure"
+sandbox_mode = "workspace-write"
+model = "gpt-5-codex"
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
