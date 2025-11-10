@@ -8,6 +8,10 @@ Do **not** mention any AI tools, models, or agents in the commit message
 (e.g., do not include names like Claude, Codex, Gemini, ChatGPT, etc.).
 The commit message must only describe the changes made in the code or files.
 
+Do **not** add any co-author or attribution footer lines using phrasing such as
+"Co-Authored-By", "Authored-By", "Generated-By", "Created-With", or any similar
+attribution-style tags, unless the user explicitly provides the exact text.
+
 **When adding new lines to the commit message, use single quotes for multi-line text.**
 
 If there is a single quote in the message, use standard bash syntax to escape that
