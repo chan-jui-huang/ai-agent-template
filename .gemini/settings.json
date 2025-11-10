@@ -1,12 +1,9 @@
 {
-  "theme": "Default",
-  "selectedAuthType": "oauth-personal",
-  "contextFileName": [
-    ".github/copilot-instructions.md",
-    "git_commit_spec.md",
-    "GEMINI.md"
-  ],
-  "preferredEditor": "vscode",
+  "context": {
+    "fileName": [
+      "AGENTS.md"
+    ]
+  },
   "mcpServers": {
     "github": {
       "httpUrl": "https://api.githubcopilot.com/mcp/",
@@ -25,5 +22,16 @@
       ],
       "trust": true
     }
+  },
+  "general": {
+    "preferredEditor": "vscode"
+  },
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "ui": {
+    "theme": "Default"
   }
 }
