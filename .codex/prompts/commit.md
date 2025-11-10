@@ -1,10 +1,14 @@
 Commit staged files.
 
-Create a git commit with detailed log using en-US.
+Create a git commit with a detailed log using en-US.
 
 On macOS, skip any in-sandbox Git writes and immediately switch to outside the sandbox. If switching fails, start writing the Git commit log, but do not execute git commit.
 
-**When adding new lines to commit message, use single quote to multi-line text.**.
+Do **not** mention any AI tools, models, or agents in the commit message
+(e.g., do not include names like Claude, Codex, Gemini, ChatGPT, etc.).
+The commit message must only describe the changes made in the code or files.
+
+**When adding new lines to the commit message, use single quotes for multi-line text.**
 
 If there is a single quote in the message, use standard bash syntax to escape that
 single quote.
