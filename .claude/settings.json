@@ -1,0 +1,38 @@
+{
+    "permissions": {
+        "allow": [
+            "Edit",
+            "WebFetch",
+            "WebSearch",
+            "Bash(tree:*)",
+            "Bash(make:*)",
+            "Bash(go:*)",
+            "Bash(ls:*)",
+            "Bash(chmod:*)",
+            "Bash(git status)",
+            "Bash(git diff:*)",
+            "Bash(git log:*)",
+            "Bash(git add:*)",
+            "Bash(git rm:*)",
+            "Bash(git commit:*)",
+            "Bash(git push:*)",
+            "Bash(git fetch:*)",
+            "Bash(git tag:*)",
+            "Bash(find:*)",
+            "Bash(sed:*)",
+            "Bash(rg:*)",
+            "Bash(npm init:*)",
+            "Bash(npm test:*)",
+            "Bash(npm install:*)",
+            "Bash(npm run:*)",
+            "Bash(npm run quality:fix:*)",
+            "Bash(gh repo create:*)",
+            "Bash(gh repo edit:*)",
+            "Bash(gh pr:*)",
+            "SlashCommand(/commit)"
+        ],
+        "deny": [],
+        "defaultMode": "acceptEdits"
+    },
+    "alwaysThinkingEnabled": false
+}
