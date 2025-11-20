@@ -1,5 +1,7 @@
 Commit staged files.
 
+Directly commit all staged files; do not append any paths after `git commit`.
+
 Create a git commit with a detailed log using en-US.
 
 On macOS, skip any in-sandbox Git writes and immediately switch to outside the sandbox. If switching fails, start writing the Git commit log, but do not execute git commit.
