@@ -86,23 +86,23 @@ or relationships. In that case, output a short error message instead of an ERD.
    - One-to-one: `||--||`
    - One-to-many: `||--o{`
    - Many-to-many: `}o--o{`
-   - Use `|` for mandatory, `o` for optional, and `{` / `}` for “many”.
+   - Use `|` for mandatory, `o` for optional, and `{` / `}` for "many".
 3. When determining **cardinality (0:N vs 1:N) from a foreign key**, apply this rule:
    - Consider a relationship where the child (N-side) table has an FK to the
      parent (1-side) table.
    - If the FK column on the N-side is **NOT NULL**:
-     - From the N side looking at the parent: the parent is mandatory → **1 parent**.
+     - From the N side looking at the parent: the parent is mandatory -> **1 parent**.
        - Mermaid: the N side should use a mandatory-many marker, e.g. `}|`.
      - From the 1 side looking at the children: the parent can have one or more
-       children → **1..N**.
+       children -> **1..N**.
        - Mermaid example:
          - `orders }|..|| users : "belongs to"`
            (each order must belong to exactly one user; each user has one or many orders).
    - If the FK column on the N-side is **NULLABLE**:
-     - From the N side looking at the parent: the parent is optional → **0..1**.
+     - From the N side looking at the parent: the parent is optional -> **0..1**.
        - Conceptually: a row can have no parent or exactly one parent.
      - From the 1 side looking at the children: the parent can have zero or many
-       children → **0..N**.
+       children -> **0..N**.
        - Mermaid example (optional child side):
          - `orders }o..|| users : "belongs to"`
            (an order may or may not be linked to a user; a user may have zero or many orders).
@@ -115,7 +115,7 @@ or relationships. In that case, output a short error message instead of an ERD.
 5. Detect the absence of reliable schema information:
    - If there is no SQL / DDL definition, no clear table/column structure, and
      no trustworthy schema description in the context:
-     - Treat this as “no schema available”.
+     - Treat this as "no schema available".
      - Do **not** create any virtual or example tables.
      - You will follow the special output rule described below for this case.
 
@@ -129,15 +129,15 @@ or relationships. In that case, output a short error message instead of an ERD.
      - Entity definitions (using the column line style shown above, indicating
        roles such as PK, FK, index, UQ, enum).
      - Relationship definitions:
-       - Use Mermaid’s `|` / `o` / `{` / `}` markers consistently with the
+       - Use Mermaid's `|` / `o` / `{` / `}` markers consistently with the
          FK-nullability rule for 0:N vs 1:N.
        - Use `"belongs to"` / `"has one"` labels as described.
      - The diagram should represent **all tables and relationships** you have
        inferred, not just a subset.
    - **Do NOT output any natural language explanation or comments** in this case, for example:
-     - No phrases like “Here is the ERD”, “Final result:”, etc.
+     - No phrases like "Here is the ERD", "Final result:", etc.
      - No `%%` comment lines inside the code.
-     - No description of the file path or “written to file” messages.
+     - No description of the file path or "written to file" messages.
 2. **Error case (no schema available): output a clear error message instead of ERD**
    - When you have determined that there is no reliable schema information:
      - Do **not** output `erDiagram`.
