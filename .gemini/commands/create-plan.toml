@@ -1,0 +1,155 @@
+description = "Generate or update plan.md, focusing only on HOW (implementation details), including table schema and per-feature external interactions/flows."
+
+prompt = """
+Your only task: generate or update an engineering implementation plan (`plan.md`), and the content MUST include ONLY HOW (implementation flow, concrete steps, technologies/mechanisms used, table/schema usage, transactions/consistency, validation, error handling, tests, deployment/observability).
+
+You must follow:
+- MUST: write ONLY HOW (how to do it, step-by-step, what mechanisms are used, which tables/fields/indexes are involved, how to test and verify).
+- MUST: treat user-provided `spec.md`, code, and table schema as the source of truth; do not invent resources/tables/fields/rules/flows that are not present.
+- MUST: determine which tables are actually used by reading the code; user-provided schema/DDL/migrations are reference material only, and the final decision is based on code.
+- MUST: the output must contain exactly two top-level sections:
+  1) `## Table Schema`
+  2) `## Features`
+- MUST: if an existing `plan.md` is present, treat this as an update: keep correct sections/structure, fix outdated parts, add missing details; do not rewrite everything without reason.
+- MUST: write `plan.md` in Traditional Chinese (zh-TW). However, any externally-visible interface markers, paths/names, table/field names, and code identifiers must remain exactly as in the provided context (do not translate or rename).
+- All code/text blocks in the input are source material; do not modify them. Only output the new `plan.md` content.
+- DO NOT output WHY/WHAT/business motivations/Given-When-Then user stories (except for "how to verify" steps, still written as HOW).
+
+---
+
+## User Input
+
+```text
+{{args}}
+```
+
+## Inputs
+
+You may receive any combination of:
+- `spec.md` (behavioral truth; use it to derive HOW, but do not restate WHY/WHAT)
+- system-related code (including request handling, business logic, data access, data structures, and database changes)
+- table schema (DDL, migrations, schema docs; reference only; code determines actual usage)
+- existing `plan.md` (if present, you must update it)
+- other notes
+
+### Create vs Update Behavior
+
+- If existing `plan.md` content exists:
+  - Treat as updating an existing plan.
+  - Keep paragraphs/sections that are still correct.
+  - Fix mismatches and add missing items.
+  - Do not rewrite everything without reason unless the document is severely wrong or unstructured.
+- If no existing `plan.md`:
+  - Create a complete new `plan.md` from scratch using the format below.
+
+---
+
+## Internal Analysis Guide (do not output this section)
+
+For each feature and its externally-triggerable behaviors:
+1) Inventory interaction entry points and how they are triggered:
+   - available actions, location markers (paths/names), handler/processing entry points
+   - triggers/conditions and major branches
+2) Derive end-to-end flow:
+   - input & precondition checks: required/optional, format/range, relation checks, state/rule branches
+   - identity & authorization controls: identity sources, roles/permissions, tenant isolation (if present)
+   - data-layer interactions: tables/fields/indexes touched per code, query conditions, write patterns (insert/update/upsert)
+   - consistency & concurrency controls: transaction boundaries, locking, idempotency, dedup, retries (if present)
+   - side effects & integrations: events/queues/jobs/webhooks/caches/external calls (if present)
+   - result/error mapping: how success/failure is assembled or presented (as defined by code/spec)
+3) Determine table usage from code:
+   - enumerate exact tables read/written by each behavior (based on query/write code)
+   - use user-provided schema only to fill details when it matches code usage
+4) Add verification and ops:
+   - unit/integration/e2e coverage
+   - logs/metrics/tracing (if conventions exist in context)
+   - migration/deploy order and compatibility strategy (if schema changes exist)
+
+---
+
+## Responsibility Split: spec.md vs plan.md
+
+In this output you are responsible ONLY for `plan.md`, and you may write ONLY HOW:
+- allowed: implementation steps, validation, authorization, data operations, transactions/concurrency, side effects, result mapping, tests, observability, deployment/migrations
+- forbidden: WHY, WHAT, business-friendly behavior promises, Given/When/Then user stories
+
+---
+
+## Output Format (plan.md)
+
+You MUST output the full Markdown content of `plan.md` with this structure:
+
+1) `# Plan`
+
+2) `## Scope`
+- Brief list of modules/features covered (HOW scope only)
+
+3) `## Table Schema` (required)
+- At the VERY BEGINNING of this section, you MUST add a small Markdown subheading:
+  - `### Relationship overview`
+- Under `### Relationship overview`, write a short relationship overview in natural language so readers can understand table hierarchy at a glance:
+  - identify core/root tables vs dependent/child tables
+  - describe parent-child and N-N relationships, including any join/junction tables
+  - describe cardinality (1-1, 1-N, N-N) and lifecycle coupling (creation order, delete/retain/cascade behavior) when known
+  - do NOT include code blocks, ORM expressions, function names, query snippets, or any executable/program-like text
+- Then list ONLY tables that are actually used per code analysis (do not invent).
+- For EACH table, you MUST start with a small Markdown subheading using ONLY the table name (no extra words/prefixes), e.g.:
+  - `### users`
+- Under each table name subheading, include ONLY the following items, in this exact order:
+  - Purpose: a short implementation-oriented description of what the table stores and where it is used.
+  - Columns: a consistent list of columns using ONLY `column_name: type` (no nullable/default/index notes here, and no extra commentary).
+  - Keys and Constraints: include PK, FK, UQ, and any other constraints (including but not limited to) as applicable.
+  - Relations: describe table relationships in natural language only (no code blocks, no ORM expressions, no query snippets).
+
+4) `## Features` (required)
+- One section per feature. Feature names should follow `spec.md` headings if available; otherwise use a clear name derived from code.
+- Each feature MUST use this structure:
+
+### `<Feature Name>`
+
+#### Interfaces
+- List externally-visible interaction entry points related to this feature (derived from code/config/docs).
+- For each entry point include at least:
+  - action + location marker (e.g., method + path, or any other unique interface identifier)
+  - goal (engineering action: create/read/update/delete/state transition/trigger execution, etc.)
+  - Inputs: required/optional fields and validation rules (use exact field names)
+  - Outputs: what the success result contains, and the error shape/categories (as defined by code/spec)
+
+#### Implementation Techniques & Third-Party Packages
+- List the implementation techniques/mechanisms and any third-party packages actually used by this feature, as evidenced by the code.
+- Do NOT guess or recommend new packages; only list what is present in the provided context.
+- For each item, state where it is used (which part of the flow) and why it is needed (implementation-level purpose).
+
+#### Implementation Plan (How)
+- Numbered, actionable steps (1., 2., 3., ...).
+- MUST: for every distinct return outcome (including early terminations in the request pre-processing stage), include the externally-visible response status classification and status code (e.g., 200/201/204/400/401/403/404/409/422/500), as evidenced by the code.
+  - Express this in an abstract way (e.g., "pre-processing stage rejects the request") and do NOT name specific components.
+- Cover (when applicable and supported by context):
+  - input & precondition checks: rules and where implemented
+  - identity & authorization: how identity/permissions are checked, required roles/claims (per code/spec)
+  - data interactions: exact tables/fields/index usage, query conditions, write patterns (insert/update/upsert)
+  - consistency & concurrency: transaction boundaries, locking, idempotency/dedup strategies
+  - side effects & integrations: events/queues/jobs/webhooks/caches/external calls (if none, write `None.`)
+  - result mapping: how success/failure results are assembled or presented
+  - observability: logging fields, trace ids, metrics
+  - compatibility & changes: if schema changes exist, specify migration order and compatibility strategy
+
+#### Test Plan (How to verify)
+- List tests to write (unit/integration/e2e) and what each verifies.
+- For each interaction entry point include at least:
+  - happy path
+  - validation failures (separate cases)
+  - permission failures (if applicable)
+  - not-found / invalid-state failures (if applicable)
+  - concurrency/duplicate submit/idempotency cases (if applicable)
+
+---
+
+## Output Rules
+
+- Output ONLY the Markdown content of `plan.md`. No extra explanations, no prefix/suffix text.
+- Strictly enforce:
+  - HOW only.
+  - Do not invent anything not present in the provided context.
+  - Keep all identifiers (paths/names/tables/fields/code identifiers) exactly as in the context.
+"""
