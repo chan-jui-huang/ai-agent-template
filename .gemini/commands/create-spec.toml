@@ -12,6 +12,8 @@ You MUST NOT describe any HOW (implementation details, technology choices, archi
 
 The assumed target readers are product managers, operations, customer support, sales, and other people without a software development background, so the wording must be clear and easy to understand, and should avoid technical terminology.
 
+IMPORTANT: You must generate or update the file `spec.md` in the workspace, but your chat reply MUST NOT paste the contents of `spec.md`.
+
 ---
 
 ## User Input
@@ -104,7 +106,7 @@ You are currently responsible only for `spec.md`, and must strictly follow the d
 
 ## Output FORMAT (spec.md)
 
-You must output the entire content of spec.md, using Markdown, with the following feature-based structure:
+You must write the entire content of spec.md, using Markdown, with the following feature-based structure:
 
 1. `# <Domain / Module Name>`
    - A short title that explains what this whole business domain or module does (in Traditional Chinese, and you may keep necessary product / business proper nouns).
@@ -160,6 +162,7 @@ You must output the entire content of spec.md, using Markdown, with the followin
        - On Failure:
          - You MUST enumerate failure situations as distinct, separate scenarios.
          - You MUST NOT merge multiple failure situations into a single combined line (for example, do not list several different causes in one bullet separated by commas).
+         - Failure scenarios must be numbered in the order they are listed (1, 2, 3, ...).
          - For each distinct failure scenario, create a separate sub-block with the following structure:
            - Failure Scenario:
              - Scenario Name: A short, user-friendly title that clearly distinguishes this scenario.
@@ -220,8 +223,12 @@ Please ensure that:
 
 ## Output Rules
 
-- Output only the Markdown content of `spec.md`. Do not add extra explanations, and do not add any prefixes or suffixes.
-- Strictly follow:
+- DO NOT paste the `spec.md` content in your reply (do not print the full file content to the terminal).
+- Your reply must include ONLY:
+  - A completion confirmation.
+  - The file path to `spec.md` (use the actual path; if it is at the repository root, the path is `spec.md`).
+- Do not add extra explanations, and do not add any prefixes or suffixes beyond the two required items.
+- The `spec.md` content must still strictly follow:
   - Content should mainly be in Traditional Chinese and suitable for readers without engineering backgrounds.
   - Keep the separation of WHY / WHAT / User Story clear.
   - Completely avoid HOW (implementation approaches, tech stack, function names, database structures, etc.).
