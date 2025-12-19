@@ -197,6 +197,12 @@ Writing principles for every `### User Stories` section:
 - **When**: Describe the actions users perform in the system, such as "fill in a certain type of information and submit" or "click a certain button in the list".
 - **Then**: Describe the results users observe, such as "see a new record", "receive a prompt message", or "cannot proceed to the next step and are asked to correct the input".
 
+Clarity rule for success scenarios, failure scenarios, and user stories:
+
+- You MUST NOT use vague placeholders such as "some information", "certain information", "relevant information", "appropriate information", "complete information", "missing required details", or similar wording.
+- Instead, you MUST explicitly name the exact information items (using the business-facing field names and labels you defined in "Required Inputs / Optional Inputs" and "System Responses and Results"), or clearly reference those already-defined items.
+- If the exact information items are unclear from the code/requirements, you MUST say so explicitly and specify what needs confirmation, rather than using vague wording.
+
 Example format (actual content should be written based on the input data, and repeated appropriately under each sub-feature):
 
 - **Story 1: Successful completion of the operation**

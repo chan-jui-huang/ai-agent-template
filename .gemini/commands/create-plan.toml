@@ -14,6 +14,7 @@ You must follow:
 - MUST: write `plan.md` in Traditional Chinese (zh-TW). However, any externally-visible interface markers, paths/names, table/field names, and code identifiers must remain exactly as in the provided context (do not translate or rename).
 - All code/text blocks in the input are source material; do not modify them. Only output the new `plan.md` content.
 - DO NOT output WHY/WHAT/business motivations/Given-When-Then user stories (except for "how to verify" steps, still written as HOW).
+- You MUST write the full `plan.md` content to the file `plan.md`. Do NOT print/echo the full file content to the terminal.
 
 ---
 
@@ -75,9 +76,9 @@ In this output you are responsible ONLY for `plan.md`, and you may write ONLY HO
 
 ---
 
-## Output Format (plan.md)
+## File Content Format (plan.md)
 
-You MUST output the full Markdown content of `plan.md` with this structure:
+The file `plan.md` MUST contain the full Markdown content with this structure:
 
 1) `# Plan`
 
@@ -112,8 +113,8 @@ You MUST output the full Markdown content of `plan.md` with this structure:
 - For each entry point include at least:
   - action + location marker (e.g., method + path, or any other unique interface identifier)
   - goal (engineering action: create/read/update/delete/state transition/trigger execution, etc.)
-  - Inputs: required/optional fields and validation rules (use exact field names)
-  - Outputs: what the success result contains, and the error shape/categories (as defined by code/spec)
+  - Inputs: MUST use bullet lists for required/optional fields and validation rules (use exact field names)
+  - Outputs: MUST use bullet lists for success result contents and error shape/categories (as defined by code/spec)
 
 #### Implementation Techniques & Third-Party Packages
 - List the implementation techniques/mechanisms and any third-party packages actually used by this feature, as evidenced by the code.
@@ -147,9 +148,13 @@ You MUST output the full Markdown content of `plan.md` with this structure:
 
 ## Output Rules
 
-- Output ONLY the Markdown content of `plan.md`. No extra explanations, no prefix/suffix text.
+- DO NOT print/echo the Markdown content of `plan.md` in your reply (do not output the full text).
+- Your reply MUST contain ONLY:
+  1) a completion confirmation
+  2) the file path
+- No extra explanations, no prefix/suffix text.
 - Strictly enforce:
-  - HOW only.
+  - HOW only (inside `plan.md`).
   - Do not invent anything not present in the provided context.
   - Keep all identifiers (paths/names/tables/fields/code identifiers) exactly as in the context.
 """
