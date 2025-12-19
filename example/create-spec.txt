@@ -1,0 +1,8 @@
+/create-spec
+
+Create `spec.md` under `docs/specs/<001-example>` based on the following:
+
+1. For failure scenarios and user stories related to **input data validation**, do **not** write multiple items. Consolidate them into **one** unified item only.
+2. `internal/http/controller/example_controller`
+3. `internal/migration/rdbms`
+4. `internal/http/route/example_route`

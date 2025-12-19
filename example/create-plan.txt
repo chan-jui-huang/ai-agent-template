@@ -1,0 +1,8 @@
+/create-plan
+
+Create `plan.md` under `docs/specs/<001-example>` based on the following:
+
+1. `docs/specs/<001-example>/spec.md`
+2. `internal/http/controller/example_controller`
+3. `internal/migration/rdbms`
+4. `internal/http/route/example_route`
