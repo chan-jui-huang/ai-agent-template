@@ -1,4 +1,4 @@
-Commit staged files.
+Commit staged files. **Don't ask me any questions.**
 
 Directly commit all staged files; do not append any paths after `git commit`.
 
