@@ -1,0 +1,28 @@
+services:
+  go-dev:
+    build: .
+    # 指定 Image 名稱，方便日後重複使用
+    image: copilot:latest
+    container_name: copilot
+    volumes:
+      # 專案程式碼掛載
+      - .:/workspace
+
+      # 1. 把整個 GO 目錄掛載進去 (包含 bin, pkg, src)
+      # 這樣你在容器內 go install 的工具，下次重啟還會在
+      - $HOME/go:/go
+
+      # 2. 持久化編譯快取
+      - ${GOCACHE:-~/.cache/go-build}:/root/.cache/go-build
+
+      # 3. 掛載 Copilot 配置目錄 (包含你的信任清單、歷史紀錄、自定義指令)
+      # 假設你的主機設定檔在 ~/.copilot
+      - $HOME/.copilot:/root/.copilot:rw
+
+    environment:
+      # 認證：會讀取主機的環境變數 GH_TOKEN
+      - GH_TOKEN=${GH_TOKEN}
+
+    # 保持容器開啟並支援終端機互動
+    stdin_open: true
+    tty: true
