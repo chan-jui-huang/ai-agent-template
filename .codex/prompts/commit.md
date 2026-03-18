@@ -4,8 +4,6 @@ Directly commit all staged files; do not append any paths after `git commit`.
 
 Create a git commit with a detailed log using en-US.
 
-On macOS, skip any in-sandbox Git writes and immediately switch to outside the sandbox. If switching fails, start writing the Git commit log, but do not execute git commit.
-
 Do **not** mention any AI tools, models, or agents in the commit message
 (e.g., do not include names like Claude, Codex, Gemini, ChatGPT, etc.).
 The commit message must only describe the changes made in the code or files.
@@ -27,3 +25,84 @@ git commit -m 'feat: new feature
 - description of the feature 2'\''s sub-feature
 '
 ```
+
+## Commit Message Writing Guidelines
+
+Use conversation history and staged code changes together whenever possible. Conversation explains intent, while `git diff --staged` shows the final implementation that will actually be committed.
+
+### Recommended Workflow
+
+#### Preferred Approach: Conversation + Staged Diff
+
+Use this approach when the current conversation reflects the work that is about to be committed.
+
+**Workflow:**
+1. Finish the task and stage the intended changes.
+2. Review the conversation context for the goal, constraints, and notable implementation decisions.
+3. Review `git diff --staged` to confirm the final committed behavior.
+4. Draft the commit message from both sources.
+
+**Example Prompt:**
+> "We're done. Please generate a commit message for me."
+
+#### Alternate Approach: Staged Diff Only
+
+Use this approach when there is no reliable conversation context, such as work completed offline.
+
+**Workflow:**
+1. Stage the intended changes.
+2. Run `git diff --staged`.
+3. Draft the commit message from the staged diff alone.
+
+**Example Prompt:**
+> "Please generate a commit message for the following `git diff`:"
+> ```diff
+> diff --git a/src/utils/math.js b/src/utils/math.js
+> index 6e9b2f7..8b4e6ad 100644
+> --- a/src/utils/math.js
+> +++ b/src/utils/math.js
+> @@ -1,5 +1,9 @@
+>  function add(a, b) {
+>    return a + b;
+>  }
+> +
+> +function subtract(a, b) {
+> +  return a - b;
+> +}
+>
+> -module.exports = { add };
+> +module.exports = { add, subtract };
+> ```
+
+### Required Format
+
+Follow the Conventional Commits 1.0.0 specification:
+https://www.conventionalcommits.org/en/v1.0.0/
+
+```text
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+### Example
+
+```text
+feat(user): add password reset endpoint
+
+Implements user story US-042 for self-service password reset.
+Adds new POST /api/user/reset-password endpoint with email validation.
+
+BREAKING CHANGE: /api/user/password endpoint removed; use /api/user/reset-password
+
+Fixes #123
+```
+
+### Git Safety Rules
+
+- NEVER commit secrets. Use environment-specific configuration files.
+- NEVER update git config via automation.
+- NEVER run destructive git commands such as `push --force` or `hard reset` without explicit user request.
+- NEVER skip git hooks such as `--no-verify` or `--no-gpg-sign` unless explicitly requested.
