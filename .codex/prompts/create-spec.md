@@ -13,9 +13,9 @@ Your job is to reverse-engineer the feature from the current codebase and produc
 - What business rules and constraints can be derived from the implementation
 - Which parts are clear, and which parts still need confirmation
 
-This workflow is for **spec extraction**, not greenfield invention.
+This workflow extracts a specification from existing behavior rather than inventing one from scratch.
 
-If the workspace already provides a dedicated create-spec skill for this workflow, use that skill as part of the execution flow and keep this prompt aligned with that skill's process and shared template.
+If the workspace provides a matching skill for this workflow, use it and keep this prompt aligned with the same overall process and shared template.
 
 You MUST treat the codebase, existing docs, and current runtime behavior as the primary source of truth.
 If the user provides extra context, use it as a secondary input that can clarify intent, priority, or domain terms, but do not let it overwrite clear evidence from the code without calling out the mismatch.
@@ -41,13 +41,10 @@ Before writing the spec, inspect the most relevant sources you can find, priorit
 
 1. Existing `spec.md` for the same feature, if any
 2. Adjacent plan / research / contracts / quickstart docs for that feature, if any
-3. Entry points and interfaces
-   - including but not limited to: HTTP routes, controllers, handlers, RPC endpoints, CLI commands, jobs, UI flows
-4. Business logic modules
-   - including but not limited to: services, use cases, domain packages, validators, policies
-5. Data definitions that reveal domain meaning
-   - Models, schemas, migrations, enums, seed data
-6. Tests that demonstrate intended or protected behavior
+3. The most relevant feature surfaces and interaction points
+4. The logic that shapes outcomes, constraints, and behavior
+5. Data or reference material that helps recover domain meaning
+6. Tests or examples that demonstrate intended or protected behavior
 7. README, ADR, comments, or operational docs that clarify domain language
 
 If the user gives a target module or directory, start there and expand outward only as needed.
@@ -142,25 +139,25 @@ Each user story must represent an independently valuable slice of behavior that 
 
 Derive stories from the implemented behaviors that deliver distinct user or operator value.
 Group related actions into coherent journeys, and separate them only when they lead to materially different goals, outcomes, or constraints.
-Relevant sources for story extraction include, but are not limited to:
+Relevant sources for story extraction may include, but are not limited to:
 
-- end-to-end operational flows
+- end-to-end flows
 - business-critical actions
-- approval, permission, or eligibility boundaries
-- state-dependent flows
-- high-value retrieval or management experiences
+- boundary conditions around who or what can act
+- flows that depend on state or context
+- interactions that surface important information or outcomes
 
 Prioritize stories by business centrality, not by code order.
 
 Acceptance scenarios must cover the observable outcomes, constraints, and decision paths that define each story.
 Include enough scenarios to describe how the story succeeds, how it fails, and how it behaves under materially different conditions.
-Relevant scenario types include, but are not limited to:
+Relevant scenario types may include, but are not limited to:
 
 - the primary successful path
 - meaningful failure or rejection paths
-- state- or input-dependent branches
-- access-control or eligibility outcomes
-- dependency-related outcomes when they affect what users or operators see
+- branches that depend on inputs, state, or context
+- outcomes that differ based on access or eligibility
+- outcomes that change what users or operators observe
 
 Do not create stories for tiny helper mechanics unless they are directly meaningful to a user or operator.
 
@@ -168,13 +165,12 @@ Do not create stories for tiny helper mechanics unless they are directly meaning
 
 List real edge cases evidenced by the implementation or tests.
 Include cases that reveal unusual limits, alternative paths, or behaviors that differ from the primary expected flow.
-Relevant edge case types include, but are not limited to:
+Relevant edge case types may include, but are not limited to:
 
 - boundary or limit conditions
-- empty, missing, duplicate, or repeated inputs or results
-- partial-completion, fallback, retry, or rollback behavior
-- state-dependent restrictions, transitions, or recovery paths
 - unusual combinations of otherwise valid inputs
+- empty, missing, duplicate, or repeated inputs or results
+- behaviors that diverge from the primary flow in a meaningful way
 - non-primary success outcomes that still produce a valid result
 
 ### 5. Functional Requirements
@@ -231,14 +227,13 @@ Good:
 ## Extraction Heuristics
 
 Use heuristics that help infer the real user-visible intent behind the implementation.
-Relevant heuristics include, but are not limited to:
+Relevant heuristics may include, but are not limited to:
 
-- validation and normalization logic often reveal required inputs, accepted variations, and business constraints
-- access-control, eligibility, or role-based checks often reveal intended actors and feature boundaries
-- completion, retry, fallback, rollback, or recovery behavior often reveal expectations around consistency and failure handling
-- output composition, display logic, or returned aggregates often reveal which information users need together
-- shared constants, fixtures, seed data, example payloads, or reference values often reveal stable domain vocabulary
-- tests often reveal the most important behaviors, decision paths, and edge cases
+- signals about what inputs matter
+- signals about who can act
+- signals about what outcomes are expected
+- signals about how unusual cases are handled
+- signals about which concepts appear stable across the feature
 
 ## Updating Existing Specs
 
