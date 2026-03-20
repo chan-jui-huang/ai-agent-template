@@ -43,21 +43,21 @@ This workflow assumes the codebase is the primary source of truth. User-provided
 
 1. Identify the feature boundary
    - Start from the user-provided `target`.
-   - Find the smallest set of directories/files that represent one coherent feature or module.
-   - If the target is too broad, narrow it to a feature-sized scope before drafting the spec.
+   - Find the narrowest coherent scope that should be described together in a single spec.
+   - If the scope is unclear or too broad, narrow it before drafting the spec.
 
 2. Gather the highest-signal evidence
-   - Read existing `spec.md`, `plan.md`, `research.md`, `quickstart.md`, and `contracts/` for the same feature if they exist.
-   - Inspect entry points first, including but not limited to: routes, handlers, controllers, UI pages, jobs, CLI commands.
-   - Inspect business logic next, including but not limited to: services, use cases, validators, policies, domain modules.
-   - Inspect tests for protected behavior, error cases, and edge cases.
-   - Inspect models, enums, fixtures, or seed data only to recover domain vocabulary and entity meaning.
+   - Read existing specs, plans, and supporting documents for the same feature if they exist.
+   - Inspect the parts of the system that best reveal how the feature behaves in practice.
+   - Inspect the logic, rules, and conditions that shape outcomes and constraints.
+   - Inspect tests for confirmed behavior, failure paths, and edge cases.
+   - Inspect reference material only when it helps recover domain vocabulary or entity meaning.
 
 3. Extract observable behavior
-   - List who can perform the feature.
-   - List the main operations users or operators can complete.
+   - Identify the relevant actors or contexts when they are visible in the implementation.
+   - Identify the feature's main behaviors and the outcomes they produce.
    - List important success and failure paths.
-   - Identify validation rules, permission rules, state restrictions, fallback behavior, and rollback behavior.
+   - Identify constraints, restrictions, fallback behavior, and recovery behavior.
    - Separate facts supported by code from inferred intent.
 
 4. Infer the requirement behind the implementation
@@ -74,13 +74,12 @@ This workflow assumes the codebase is the primary source of truth. User-provided
 
 6. Draft or update the spec
    - Write a full SpecKit `spec.md`.
-   - If a `spec.md` already exists, preserve accurate sections and rewrite only what no longer matches the implementation.
-   - The final result must read as one coherent current specification, not a patchwork.
+   - If a previous spec exists, preserve what is still accurate and update what is not.
+   - Ensure the final result reads as one coherent current specification.
 
 7. Validate before finishing
-   - Confirm there are no implementation details in the final wording.
-   - Confirm every user story maps to implemented behavior.
-   - Confirm failure and edge cases are backed by code or tests.
+   - Confirm the final wording stays at the level of observable behavior and business meaning.
+   - Confirm the key stories, constraints, and edge cases are supported by evidence.
    - Confirm unresolved ambiguity is labeled instead of guessed.
 
 ## Output Contract
