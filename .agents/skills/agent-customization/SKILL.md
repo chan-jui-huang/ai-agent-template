@@ -73,6 +73,8 @@ Create a SKILL.md that implements a PR checklist workflow: scope it to `workspac
 
 ## Links and references
 
+Any skill created through this workflow MUST treat the references below as governing guidance and align its structure, metadata, and usage instructions with the requirements they define.
+
 - What are Skills: https://agentskills.io/what-are-skills
 - Agent Skills specification: https://agentskills.io/specification
 
