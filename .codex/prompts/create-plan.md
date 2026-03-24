@@ -1,24 +1,37 @@
 ---
-description: Generate or update plan.md, focusing only on HOW (implementation details), including table schema and per-feature external interactions/flows.
-argument-hint: [ARGS="<arguments>"]
+description: Extract and infer a dependency-ordered SpecKit-style `plan.md` from an existing implementation, a supporting `spec.md`, and any optional user hints about the intended development plan.
+argument-hint: [TARGET="<files|dirs|module>"] [SPEC_PATH="<docs/specs/.../spec.md>"] [PLAN_PATH="<docs/specs/.../plan.md>"] [PLAN_HINT="<optional plan intuition or constraints>"]
 ---
 
-Your only task: generate or update an engineering implementation plan (`plan.md`), and the content MUST include ONLY HOW (implementation flow, concrete steps, technologies/mechanisms used, table/schema usage, transactions/consistency, validation, error handling, tests, deployment/observability).
+You are generating or updating a SpecKit-style implementation plan for an existing feature or module.
 
-You must follow:
-- MUST: write ONLY HOW (how to do it, step-by-step, what mechanisms are used, which tables/fields/indexes are involved, how to test and verify).
-- MUST: treat user-provided `spec.md`, code, and table schema as the source of truth; do not invent resources/tables/fields/rules/flows that are not present.
-- MUST: determine which tables are actually used by reading the code; user-provided schema/DDL/migrations are reference material only, and the final decision is based on code.
-- MUST: the output must contain exactly two top-level sections:
-  1) `## Table Schema`
-  2) `## Features`
-- MUST: if an existing `plan.md` is present, treat this as an update: keep correct sections/structure, fix outdated parts, add missing details; do not rewrite everything without reason.
-- MUST: write `plan.md` in Traditional Chinese (zh-TW). However, any externally-visible interface markers, paths/names, table/field names, and code identifiers must remain exactly as in the provided context (do not translate or rename).
-- All code/text blocks in the input are source material; do not modify them. Only output the new `plan.md` content.
-- DO NOT output WHY/WHAT/business motivations/Given-When-Then user stories (except for "how to verify" steps, still written as HOW).
-- You MUST write the full `plan.md` content to the file `plan.md`. Do NOT print/echo the full file content to the terminal.
+Your job is to reverse-engineer the current implementation and produce a high-quality `plan.md` that explains, in dependency order:
 
----
+- how the current system is actually built,
+- how each `spec.md` user story maps to concrete implementation work,
+- what inputs each story-level flow consumes,
+- what outputs each story-level flow produces,
+- how the program transforms those inputs into outputs,
+- which cross-cutting technical decisions support the feature today,
+- and where the code and `spec.md` disagree.
+
+This workflow extracts a development plan from an existing codebase.
+It does not invent a new plan from scratch.
+
+If the workspace provides a matching skill for this workflow, use it and keep this prompt aligned with the same overall process and shared template.
+
+You MUST treat the codebase as the primary source of truth.
+You MUST treat the user-provided `spec.md` as a secondary source that helps recover user-story boundaries, terminology, and intended sequencing.
+Optional user hints about the plan may refine naming or emphasis, but they are not required and must not override clear evidence from the code.
+
+## Required Inputs
+
+The user MUST provide:
+
+- the corresponding `spec.md`, and
+- the relevant implementation context, including one or more files and/or directories.
+
+If either the spec or the implementation boundary is missing, stop and ask for the missing input.
 
 ## User Input
 
@@ -26,136 +39,103 @@ You must follow:
 $ARGUMENTS
 ```
 
-## Inputs
+Use `PLAN_HINT` only if the user supplies it.
+Treat it as optional context because the user may not know the real implementation plan.
 
-You may receive any combination of:
-- `spec.md` (behavioral truth; use it to derive HOW, but do not restate WHY/WHAT)
-- system-related code (including request handling, business logic, data access, data structures, and database changes)
-- table schema (DDL, migrations, schema docs; reference only; code determines actual usage)
-- existing `plan.md` (if present, you must update it)
-- other notes
+## Required Outcome
 
-### Create vs Update Behavior
+Create or update a SpecKit-style `plan.md` file at the requested path.
 
-- If existing `plan.md` content exists:
-  - Treat as updating an existing plan.
-  - Keep paragraphs/sections that are still correct.
-  - Fix mismatches and add missing items.
-  - Do not rewrite everything without reason unless the document is severely wrong or unstructured.
-- If no existing `plan.md`:
-  - Create a complete new `plan.md` from scratch using the format below.
+If the user does not provide a concrete output path, prefer a repository-consistent path next to the provided `spec.md`.
 
----
+Your reply MUST NOT paste the full `plan.md` content.
 
-## Internal Analysis Guide (do not output this section)
+## What To Inspect First
 
-For each feature and its externally-triggerable behaviors:
-1) Inventory interaction entry points and how they are triggered:
-   - available actions, location markers (paths/names), handler/processing entry points
-   - triggers/conditions and major branches
-2) Derive end-to-end flow:
-   - input & precondition checks: required/optional, format/range, relation checks, state/rule branches
-   - identity & authorization controls: identity sources, roles/permissions, tenant isolation (if present)
-   - data-layer interactions: tables/fields/indexes touched per code, query conditions, write patterns (insert/update/upsert)
-   - consistency & concurrency controls: transaction boundaries, locking, idempotency, dedup, retries (if present)
-   - side effects & integrations: events/queues/jobs/webhooks/caches/external calls (if present)
-   - result/error mapping: how success/failure is assembled or presented (as defined by code/spec)
-3) Determine table usage from code:
-   - enumerate exact tables read/written by each behavior (based on query/write code)
-   - use user-provided schema only to fill details when it matches code usage
-4) Add verification and ops:
-   - unit/integration/e2e coverage
-   - logs/metrics/tracing (if conventions exist in context)
-   - migration/deploy order and compatibility strategy (if schema changes exist)
+Before writing the plan, inspect the most relevant sources you can find, prioritizing:
 
----
+1. the target `spec.md`,
+2. an existing `plan.md` for the same feature, if any,
+3. the code paths that implement each user story,
+4. shared logic, data access, and integration boundaries that shape real behavior,
+5. tests that confirm flow order, branching, and failure handling,
+6. adjacent docs that clarify technical context, assumptions, or constraints.
 
-## Responsibility Split: spec.md vs plan.md
+If the user gives a target module or directory, start there and expand outward only as needed.
 
-In this output you are responsible ONLY for `plan.md`, and you may write ONLY HOW:
-- allowed: implementation steps, validation, authorization, data operations, transactions/concurrency, side effects, result mapping, tests, observability, deployment/migrations
-- forbidden: WHY, WHAT, business-friendly behavior promises, Given/When/Then user stories
+## Source-of-Truth Rules
 
----
+- Prefer implemented behavior over undocumented intent.
+- Prefer tests and shared business logic over thin adapters.
+- Prefer real call order, dependency order, validation order, and persistence order over naming guesses.
+- If code and `spec.md` disagree:
+  - preserve the implementation as the current truth in `plan.md`,
+  - record the conflict explicitly in the plan.
+- If the implementation only partially supports a `spec.md` story:
+  - describe only the supported portion as current truth,
+  - mark uncertainty or mismatch explicitly,
+  - do not invent missing technical steps to "complete" the story.
 
-## File Content Format (plan.md)
+## Core Distinction From Standard SpecKit Planning
 
-The file `plan.md` MUST contain the full Markdown content with this structure:
+Normal SpecKit planning starts from a validated feature specification and designs a future implementation.
 
-1) `# Plan`
+This workflow starts from an existing implementation and must reconstruct the effective development plan that the code already embodies.
 
-2) `## Scope`
-- Brief list of modules/features covered (HOW scope only)
+That means you MUST:
 
-3) `## Table Schema` (required)
-- At the VERY BEGINNING of this section, you MUST add a small Markdown subheading:
-  - `### Relationship overview`
-- Under `### Relationship overview`, write a short relationship overview in natural language so readers can understand table hierarchy at a glance:
-  - identify core/root tables vs dependent/child tables
-  - describe parent-child and N-N relationships, including any join/junction tables
-  - describe cardinality (1-1, 1-N, N-N) and lifecycle coupling (creation order, delete/retain/cascade behavior) when known
-  - do NOT include code blocks, ORM expressions, function names, query snippets, or any executable/program-like text
-- Then list ONLY tables that are actually used per code analysis (do not invent).
-- For EACH table, you MUST start with a small Markdown subheading using ONLY the table name (no extra words/prefixes), e.g.:
-  - `### users`
-- Under each table name subheading, include ONLY the following items, in this exact order:
-  - Purpose: a short implementation-oriented description of what the table stores and where it is used.
-  - Columns: a consistent list of columns using ONLY `column_name: type` (no nullable/default/index notes here, and no extra commentary).
-  - Keys and Constraints: include PK, FK, UQ, and any other constraints (including but not limited to) as applicable.
-  - Relations: describe table relationships in natural language only (no code blocks, no ORM expressions, no query snippets).
+- use `spec.md` user stories as the organizing frame,
+- order the stories by implementation dependency,
+- derive the actual technical flow for each story from the code,
+- describe each story in terms of input, output, and transformation logic,
+- keep the final plan high-level and implementation-oriented,
+- record code/spec conflicts instead of forcing false consistency.
 
-4) `## Features` (required)
-- One section per feature. Feature names should follow `spec.md` headings if available; otherwise use a clear name derived from code.
-- Each feature MUST use this structure:
+## What The Plan Must And Must Not Contain
 
-### `<Feature Name>`
+The resulting `plan.md` must:
 
-#### Interfaces
-- List externally-visible interaction entry points related to this feature (derived from code/config/docs).
-- For each entry point include at least:
-  - action + location marker (e.g., method + path, or any other unique interface identifier)
-  - goal (engineering action: create/read/update/delete/state transition/trigger execution, etc.)
-  - Inputs: MUST use bullet lists for required/optional fields and validation rules (use exact field names)
-  - Outputs: MUST use bullet lists for success result contents and error shape/categories (as defined by code/spec)
+- stay focused on implementation strategy and technical flow,
+- use code as the primary evidence,
+- treat `spec.md` as supporting context,
+- include the relevant documentation and source-code structure for the feature boundary,
+- include story-by-story plans in dependency order,
+- include `Input`, `Output`, and a prose description of how input becomes output for every story plan,
+- record conflicts between code and `spec.md`,
+- remain high-level rather than becoming a task checklist or code dump.
 
-#### Implementation Techniques & Third-Party Packages
-- List the implementation techniques/mechanisms and any third-party packages actually used by this feature, as evidenced by the code.
-- Do NOT guess or recommend new packages; only list what is present in the provided context.
-- For each item, state where it is used (which part of the flow) and why it is needed (implementation-level purpose).
+The resulting `plan.md` must NOT:
 
-#### Implementation Plan (How)
-- Numbered, actionable steps (1., 2., 3., ...).
-- MUST: for every distinct return outcome (including early terminations in the request pre-processing stage), include the externally-visible response status classification and status code (e.g., 200/201/204/400/401/403/404/409/422/500), as evidenced by the code.
-  - Express this in an abstract way (e.g., "pre-processing stage rejects the request") and do NOT name specific components.
-- Cover (when applicable and supported by context):
-  - input & precondition checks: rules and where implemented
-  - identity & authorization: how identity/permissions are checked, required roles/claims (per code/spec)
-  - data interactions: exact tables/fields/index usage, query conditions, write patterns (insert/update/upsert)
-  - consistency & concurrency: transaction boundaries, locking, idempotency/dedup strategies
-  - side effects & integrations: events/queues/jobs/webhooks/caches/external calls (if none, write `None.`)
-  - result mapping: how success/failure results are assembled or presented
-  - observability: logging fields, trace ids, metrics
-  - compatibility & changes: if schema changes exist, specify migration order and compatibility strategy
+- invent missing architecture, packages, schemas, or flows,
+- restate the entire `spec.md` as product prose,
+- devolve into low-level file-by-file patch instructions,
+- hide ambiguities or code/spec mismatches.
 
-#### Test Plan (How to verify)
-- List tests to write (unit/integration/e2e) and what each verifies.
-- For each interaction entry point include at least:
-  - happy path
-  - validation failures (separate cases)
-  - permission failures (if applicable)
-  - not-found / invalid-state failures (if applicable)
-  - concurrency/duplicate submit/idempotency cases (if applicable)
+## Shared Template
 
----
+Write the full file in Markdown by following the shared template at:
+
+- `.agents/skills/create-plan/assets/plan-template.md`
+
+Use that file as the single source of truth for section order and placeholder shape.
+
+Rules for using the shared template:
+
+- Replace every placeholder with extracted content.
+- Do not leave template placeholders, comments, or instructional text in the final `plan.md`.
+- If no meaningful conflicts are found, keep the conflict section and state that none were identified.
+- If the template and older local plan examples differ, prefer the shared template.
+
+## Writing Rules
+
+- Write the final `plan.md` primarily in Traditional Chinese (`zh-TW`).
+- Keep externally visible identifiers, file paths, route paths, table names, field names, and code identifiers exactly as they appear in the source material.
+- Keep the writing high-level and abstract enough to explain architecture and flow, not line-level coding steps.
+- Use concise Markdown headings and lists where they improve scanning.
 
 ## Output Rules
 
-- DO NOT print/echo the Markdown content of `plan.md` in your reply (do not output the full text).
-- Your reply MUST contain ONLY:
-  1) a completion confirmation
-  2) the file path
-- No extra explanations, no prefix/suffix text.
-- Strictly enforce:
-  - HOW only (inside `plan.md`).
-  - Do not invent anything not present in the provided context.
-  - Keep all identifiers (paths/names/tables/fields/code identifiers) exactly as in the context.
+- Do NOT print or echo the full `plan.md` content in your reply.
+- Your reply MUST contain only:
+  1. a completion confirmation
+  2. the file path
