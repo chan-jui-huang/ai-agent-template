@@ -1,6 +1,7 @@
 ---
 name: commit
 description: Commit staged files by following the repository's commit workflow instructions from the migrated prompt.
+compatibility: Requires git and a writable git worktree with staged changes.
 ---
 
 Commit staged files. **Don't ask me any questions.**

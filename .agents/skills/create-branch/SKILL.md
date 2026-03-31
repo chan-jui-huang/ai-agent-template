@@ -1,6 +1,7 @@
 ---
 name: create-branch
 description: Create and check out a meaningful git branch name from the staged changes.
+compatibility: Requires git and a writable git worktree with staged changes.
 user-invocable: true
 ---
 

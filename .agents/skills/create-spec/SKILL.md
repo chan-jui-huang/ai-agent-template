@@ -1,6 +1,7 @@
 ---
 name: create-spec
 description: Extract a SpecKit `spec.md` from an existing feature or module by reading code, tests, and adjacent docs, then inferring the current product requirement with explicit ambiguity markers.
+compatibility: Requires access to the target workspace files so the agent can inspect code, tests, and adjacent docs, then write or update `spec.md`.
 metadata:
   version: '0.2.0'
 ---

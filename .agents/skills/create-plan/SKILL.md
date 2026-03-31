@@ -1,7 +1,7 @@
 ---
 name: create-plan
 description: Extract a SpecKit-style `plan.md` from an existing feature or module by reading code, tests, and the corresponding `spec.md`, then ordering each user story by implementation dependency and documenting the story-level technical plan in terms of input, output, and transformation logic.
-compatibility: Requires access to the workspace files for the target code and its corresponding `spec.md`. The generated plan should follow the shared template in `assets/plan-template.md`.
+compatibility: Requires access to the target workspace files and the corresponding `spec.md` so the agent can inspect the implementation and write or update `plan.md`.
 metadata:
   version: '0.2.0'
 ---
