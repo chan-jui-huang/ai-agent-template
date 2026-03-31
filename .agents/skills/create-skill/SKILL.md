@@ -1,12 +1,12 @@
 ---
-name: agent-customization
+name: create-skill
 description: Create an agent skill customization file (SKILL.md) that packages a workflow.
 compatibility: Requires access to the workspace files where the skill will be created or updated.
 metadata:
   version: '0.2.0'
 ---
 
-# Creating SKILL.md
+# Create Skill
 
 ## Overview
 
