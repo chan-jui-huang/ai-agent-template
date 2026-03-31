@@ -1,9 +1,6 @@
----
-description: Extract and infer a dependency-ordered SpecKit-style `plan.md` from an existing implementation, a supporting `spec.md`, and any optional user hints about the intended development plan.
-argument-hint: [TARGET="<files|dirs|module>"] [SPEC_PATH="<docs/specs/.../spec.md>"] [PLAN_PATH="<docs/specs/.../plan.md>"] [PLAN_HINT="<optional plan intuition or constraints>"]
----
+# Create-Plan Workflow Runbook
 
-You are generating or updating a SpecKit-style implementation plan for an existing feature or module.
+Use this runbook when generating or updating a SpecKit-style implementation plan for an existing feature or module.
 
 Your job is to reverse-engineer the current implementation and produce a high-quality `plan.md` that explains, in dependency order:
 
@@ -18,8 +15,6 @@ Your job is to reverse-engineer the current implementation and produce a high-qu
 This workflow extracts a development plan from an existing codebase.
 It does not invent a new plan from scratch.
 
-If the workspace provides a matching skill for this workflow, use it and keep this prompt aligned with the same overall process and shared template.
-
 You MUST treat the codebase as the primary source of truth.
 You MUST treat the user-provided `spec.md` as a secondary source that helps recover user-story boundaries, terminology, and intended sequencing.
 Optional user hints about the plan may refine naming or emphasis, but they are not required and must not override clear evidence from the code.
@@ -33,13 +28,7 @@ The user MUST provide:
 
 If either the spec or the implementation boundary is missing, stop and ask for the missing input.
 
-## User Input
-
-```text
-$ARGUMENTS
-```
-
-Use `PLAN_HINT` only if the user supplies it.
+Use `plan_hint` only if the user supplies it.
 Treat it as optional context because the user may not know the real implementation plan.
 
 ## Required Outcome
@@ -48,7 +37,7 @@ Create or update a SpecKit-style `plan.md` file at the requested path.
 
 If the user does not provide a concrete output path, prefer a repository-consistent path next to the provided `spec.md`.
 
-Your reply MUST NOT paste the full `plan.md` content.
+Do not paste the full `plan.md` content in the completion message unless the invoking environment explicitly requires it.
 
 ## What To Inspect First
 
@@ -133,9 +122,7 @@ Rules for using the shared template:
 - Keep the writing high-level and abstract enough to explain architecture and flow, not line-level coding steps.
 - Use concise Markdown headings and lists where they improve scanning.
 
-## Output Rules
+## Completion Rules
 
-- Do NOT print or echo the full `plan.md` content in your reply.
-- Your reply MUST contain only:
-  1. a completion confirmation
-  2. the file path
+- Follow any response-format contract defined by the invoking environment.
+- If no stricter contract exists, return a concise completion message with the final `plan.md` path.
