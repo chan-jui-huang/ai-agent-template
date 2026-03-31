@@ -22,9 +22,9 @@ The codebase is the primary source of truth. The corresponding `spec.md` is requ
 
 ## Instructions
 
-1. Read `references/workflow.md` and follow it as the authoritative runbook for source-of-truth handling, story dependency ordering, and output constraints.
+1. Read `references/workflow.md` and follow it as the authoritative runbook for this skill. **You must follow it in full.**
 2. Use `assets/plan-template.md` as the single source of truth for the generated `plan.md` structure.
-3. Keep the final `plan.md` high-level, implementation-oriented, and primarily in Traditional Chinese (`zh-TW`).
+3. Keep the final `plan.md` focused on HOW in Traditional Chinese (`zh-TW`), not product requirement details.
 4. Base story order on implementation dependency rather than the original `spec.md` order when the code shows a different dependency chain.
 5. If an older `plan.md` exists, update it into one coherent current plan instead of layering patchwork edits on top.
 

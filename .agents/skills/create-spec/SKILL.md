@@ -21,7 +21,7 @@ Treat the codebase as the primary source of truth. User-provided context is opti
 
 ## Instructions
 
-1. Read `references/workflow.md` and follow it as the authoritative runbook for extraction, ambiguity handling, and output constraints.
+1. Read `references/workflow.md` and follow it as the authoritative runbook for this skill. **You must follow it in full.**
 2. Use `assets/spec-template.md` as the single source of truth for the generated `spec.md` structure.
 3. Keep the final `spec.md` focused on WHAT/WHY in Traditional Chinese (`zh-TW`), not implementation details.
 4. If a previous `spec.md` exists, update it into one coherent current specification instead of layering patchwork edits on top.
