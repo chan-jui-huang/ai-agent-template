@@ -1,3 +1,8 @@
+---
+name: commit
+description: Commit staged files by following the repository's commit workflow instructions from the migrated prompt.
+---
+
 Commit staged files. **Don't ask me any questions.**
 
 Directly commit all staged files; do not append any paths after `git commit`.
@@ -18,6 +23,7 @@ If there is a single quote in the message, use standard bash syntax to escape th
 single quote.
 
 Example:
+
 ```
 git commit -m 'feat: new feature
 
@@ -37,12 +43,14 @@ Use conversation history and staged code changes together whenever possible. Con
 Use this approach when the current conversation reflects the work that is about to be committed.
 
 **Workflow:**
+
 1. Finish the task and stage the intended changes.
 2. Review the conversation context for the goal, constraints, and notable implementation decisions.
 3. Review `git diff --staged` to confirm the final committed behavior.
 4. Draft the commit message from both sources.
 
 **Example Prompt:**
+
 > "We're done. Please generate a commit message for me."
 
 #### Alternate Approach: Staged Diff Only
@@ -50,12 +58,15 @@ Use this approach when the current conversation reflects the work that is about 
 Use this approach when there is no reliable conversation context, such as work completed offline.
 
 **Workflow:**
+
 1. Stage the intended changes.
 2. Run `git diff --staged`.
 3. Draft the commit message from the staged diff alone.
 
 **Example Prompt:**
+
 > "Please generate a commit message for the following `git diff`:"
+>
 > ```diff
 > diff --git a/src/utils/math.js b/src/utils/math.js
 > index 6e9b2f7..8b4e6ad 100644
