@@ -1,9 +1,6 @@
----
-description: Extract and infer a SpecKit `spec.md` from an existing codebase, current behavior, and any optional user hints.
-argument-hint: [TARGET="<files|dirs|module>"] [SPEC_PATH="<docs/specs/.../spec.md>"] [FEATURE_NAME="<feature name>"] [HINT="<optional business context>"]
----
+# Create-Spec Workflow Runbook
 
-You are generating or updating a SpecKit feature specification for an existing feature or module.
+Use this runbook when generating or updating a SpecKit feature specification for an existing feature or module.
 
 Your job is to reverse-engineer the feature from the current codebase and produce a high-quality `spec.md` that explains:
 
@@ -15,16 +12,8 @@ Your job is to reverse-engineer the feature from the current codebase and produc
 
 This workflow extracts a specification from existing behavior rather than inventing one from scratch.
 
-If the workspace provides a matching skill for this workflow, use it and keep this prompt aligned with the same overall process and shared template.
-
 You MUST treat the codebase, existing docs, and current runtime behavior as the primary source of truth.
 If the user provides extra context, use it as a secondary input that can clarify intent, priority, or domain terms, but do not let it overwrite clear evidence from the code without calling out the mismatch.
-
-## User Input
-
-```text
-$ARGUMENTS
-```
 
 ## Required Outcome
 
@@ -33,7 +22,7 @@ Create or update a SpecKit-style `spec.md` file at the requested path.
 If the user does not provide a concrete output path, prefer a reasonable path under `docs/specs/`.
 Only fall back to another repository-consistent location if there is clear evidence that `docs/specs/` is not the correct convention in the current workspace.
 
-Your reply MUST NOT paste the full `spec.md` content.
+Do not paste the full `spec.md` content in the completion message unless the invoking environment explicitly requires it.
 
 ## What To Inspect First
 
@@ -257,11 +246,7 @@ Before finishing, verify internally that the generated spec:
 - does not leave placeholder template text behind,
 - uses consistent business terminology throughout.
 
-## Output Rules
+## Completion Rules
 
-- Do NOT print the full `spec.md` content in your reply.
-- Your reply must contain only:
-  - `Completed`
-  - the final path to `spec.md`
-
-Nothing else.
+- Follow any response-format contract defined by the invoking environment.
+- If no stricter contract exists, return a concise completion message with the final `spec.md` path.
